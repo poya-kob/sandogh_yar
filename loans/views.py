@@ -9,3 +9,9 @@ class RequestLoanView(FormView):
 class ListRequestLoanView(ListView):
     # todo: only admin can access this view to accept or reject loans requests
     pass
+
+
+class ListUsersInstallments(ListView):
+    # todo: users can see remaining installments here
+    pass
+
