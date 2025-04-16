@@ -105,7 +105,6 @@ class InstallmentPayment(models.Model):
     payment_date = jmodels.jDateTimeField(auto_now_add=True)  # تاریخ پرداخت
     receipt_image = models.ImageField(upload_to="loan_receipts/", null=True, blank=True)  # تصویر فیش پرداختی
     installment_status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='U')  # وضعیت پرداخت
-    is_approved = models.BooleanField(default=False)  # تأیید پرداخت توسط ادمین
 
     def __str__(self):
         return f"{self.installment.loan.user.username} - قسط {self.amount} تومان ({self.payment_date})"
