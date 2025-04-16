@@ -11,10 +11,12 @@ class LoanRequest(models.Model):
         ('PR', 'درانتظار بررسی'),
         ('R', 'تایید نشده'),
         ('A', 'تایید شده'),
+        ('C', 'پرداخت کامل شده'),
     )
 
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()  # مبلغ وام
+    Remaining = models.PositiveIntegerField()  # باقیمانده مبلغ وام
     approval_date = jmodels.jDateTimeField(null=True, blank=True)  # تاریخ تایید وام
     repayment_months = models.PositiveIntegerField(default=20)  # تعداد ماه‌های بازپرداخت
     monthly_installment = models.PositiveIntegerField(null=True, blank=True)  # مبلغ هر قسط
@@ -84,13 +86,25 @@ class LoanRequest(models.Model):
     def unpaid_installments(self):
         return self.installments.filter(is_paid=False)
 
+    def check_completion(self):
+        if self.installments.exists() and not self.installments.filter(is_paid=False).exists():
+            self.request_status = 'C'
+            self.save(update_fields=['request_status'])
 
-class LoanPayment(models.Model):
+
+class InstallmentPayment(models.Model):
     """مدل مربوط به پرداخت اقساط وام"""
+    STATUS_CHOICES = (
+        ('PR', 'درانتظار بررسی'),
+        ('R', 'تایید نشده'),
+        ('A', 'تایید شده'),
+        ('U', 'پرداخت نشده'),
+    )
     installment = models.ForeignKey('InstallmentSchedule', on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()  # مبلغ پرداخت‌شده
     payment_date = jmodels.jDateTimeField(auto_now_add=True)  # تاریخ پرداخت
     receipt_image = models.ImageField(upload_to="loan_receipts/", null=True, blank=True)  # تصویر فیش پرداختی
+    installment_status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='U')  # وضعیت پرداخت
     is_approved = models.BooleanField(default=False)  # تأیید پرداخت توسط ادمین
 
     def __str__(self):
@@ -101,7 +115,7 @@ class InstallmentSchedule(models.Model):
     loan = models.ForeignKey("LoanRequest", on_delete=models.CASCADE, related_name="installments")
     due_date = jmodels.jDateField()
     amount = models.PositiveIntegerField()
-    is_paid = models.BooleanField(default=False)
+    is_payed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['due_date']
