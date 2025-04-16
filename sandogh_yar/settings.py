@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # installed apps
     'django_celery_beat',
+    'django_jalali',
     # my apps
     'users',
     'payments',

@@ -9,5 +9,5 @@ class CustomUserAdmin(UserAdmin):
         ("اطلاعات صندوق", {"fields": ("is_admin", "join_date")}),
     )
 
-    list_display = ("username", "email", "is_admin", "join_date_jalali")
+    list_display = ("username", "email", "is_admin", "join_date")
     list_filter = ("is_admin", "join_date")
