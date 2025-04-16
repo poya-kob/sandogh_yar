@@ -10,14 +10,12 @@ class MembershipFee(models.Model):
     start_date = jmodels.jDateField()  # تاریخ شروع این مبلغ
     end_date = jmodels.jDateField(null=True, blank=True)  # تاریخ پایان (در صورت تغییر مبلغ)
 
-    # def start_date_jalali(self):
-    #     return jdatetime.datetime.fromgregorian(date=self.start_date).strftime("%Y/%m/%d")
-    #
-    # def end_date_jalali(self):
-    #     return jdatetime.datetime.fromgregorian(date=self.end_date).strftime("%Y/%m/%d") if self.end_date else "فعال"
-
     def __str__(self):
         return f"{self.amount} تومان از {self.start_date}"
+
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)
+        # todo: set end_date on last obj = current object start_date
 
 
 class Payment(models.Model):
@@ -27,9 +25,6 @@ class Payment(models.Model):
     payment_date = jmodels.jDateTimeField(auto_now_add=True)  # تاریخ پرداخت
     receipt_image = models.ImageField(upload_to="receipts/", null=True, blank=True)  # تصویر فیش پرداختی
     is_approved = models.BooleanField(default=False)  # تأیید پرداخت توسط ادمین
-
-    # def payment_date_jalali(self):
-    #     return jdatetime.datetime.fromgregorian(datetime=localtime(self.payment_date)).strftime("%Y/%m/%d - %H:%M")
 
     def __str__(self):
         return f"{self.user.username} - {self.amount} تومان ({self.payment_date})"

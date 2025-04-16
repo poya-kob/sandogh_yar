@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from django.views.generic import FormView, ListView
 
-# Create your views here.
+
+class RequestLoanView(FormView):
+    # todo: user can request loan if register join_date > 4 month
+    pass
+
+
+class ListRequestLoanView(ListView):
+    # todo: only admin can access this view to accept or reject loans requests
+    pass
