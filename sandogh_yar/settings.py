@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_jalali',
     # my apps
+    'core',
+    'fund',
     'users',
     'payments',
     'loans',

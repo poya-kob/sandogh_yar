@@ -2,7 +2,7 @@ from django.db import models
 from django.core.mail import send_mail
 
 from django_jalali.db import models as jmodels
-from loans.models import LoanRequest, LoanPayment
+from loans.models import LoanRequest, InstallmentPayment
 from users.models import User
 
 
@@ -15,9 +15,6 @@ class Reminder(models.Model):
     )
     due_date = jmodels.jDateField()  # تاریخ سررسید پرداخت
     sent = models.BooleanField(default=False)  # آیا یادآوری ارسال شده؟
-
-    # def due_date_jalali(self):
-    #     return jdatetime.datetime.fromgregorian(date=self.due_date).strftime("%Y/%m/%d")
 
     def send_email_reminder(self):
         """ارسال ایمیل یادآوری"""
